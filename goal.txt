@@ -1,0 +1,75 @@
+1. Multivariate Regression: Predicting Insurance Premium Trends
+
+This is the best "Starter Project." You will build a model that predicts the Homeowner’s Insurance Price Index based on the costs of the things insurance has to pay for (lumber, labor, and homes).
+
+    Target Variable (Label):
+
+        PCU9241269241262: Producer Price Index (PPI) for Homeowner's Insurance.[1][2]
+
+    Feature Variables (Inputs):
+
+        WPSID6121: PPI for Construction Materials (the cost to rebuild a home).
+
+        CSUSHPISA: S&P Case-Shiller Home Price Index (the market value of the assets being insured).
+
+        MORTGAGE30US: 30-Year Fixed Rate Mortgage Average (impacts housing demand).
+
+    TensorFlow Approach: Use a Dense neural network with a few hidden layers.
+
+        Goal: Learn the historical correlation between rising material costs and subsequent jumps in insurance premiums.
+
+2. Time Series Forecasting: LSTM for Premium Inflation
+
+In insurance, it’s not just about current prices, but where they are going. You can use a Recurrent Neural Network (RNN) to forecast future insurance inflation.
+
+    Target Data:
+
+        CUUR0000SEHD: CPI for Tenants' and Household Insurance.[3]
+
+    TensorFlow Approach: Build a Long Short-Term Memory (LSTM) model.
+
+        Workflow: Feed the model a window of 12–24 months of historical insurance CPI data and have it predict the next 3 months.
+
+        Advanced: Add a second "channel" to the LSTM for PCEPI (Personal Consumption Expenditures Price Index) to see if general inflation helps the model predict insurance-specific inflation.
+
+3. Impact Analysis: The "Disaster Loss" Model
+
+Insurance premiums are heavily influenced by "shocks" like natural disasters. FRED tracks disaster-related economic losses which can be used to see how quickly the market reacts.
+
+    Key Datasets:
+
+        VFXDSX: Private Saving and Investment: Disaster Losses (tracks the scale of catastrophe losses in billions of dollars).[4]
+
+        PCU9241269241262: PPI for Homeowner's Insurance.[1]
+
+    TensorFlow Approach: Simple Linear Regression or a Decision Tree.
+
+        Goal: Model the "lag time." If disaster losses spike in Quarter 1, how many months does it take for the Homeowner's Insurance PPI to show a statistically significant increase?
+
+4. Replacement Cost Estimation (Proxy Model)
+
+A key part of homeowners insurance is the Replacement Cost Value (RCV). If the cost of labor and materials goes up, insurance must go up.
+
+    Feature Variables:
+
+        WPUSI012011: Special Index for Construction Materials.[5]
+
+        CES2000000003: Average Hourly Earnings of All Employees, Construction (Labor costs).
+
+        CUUR0000SEHP04: CPI for Repair of Household Items.[6]
+
+    TensorFlow Approach: Create a model that estimates a "Reconstruction Cost Index."
+
+        Project Idea: Compare your "Reconstruction Index" to the actual Insurance PPI (PCU9241269241262). If your reconstruction index is rising faster than premiums, the model might predict an upcoming "rate hike" cycle for the insurance industry.
+
+Suggested Workflow for Your Project
+
+    Data Acquisition: Use the fredapi library in Python to pull these series directly into a Pandas DataFrame.
+
+    Preprocessing:
+
+        Since these are different scales (some are indexes, some are billions of dollars, some are percentages), you must use tf.keras.layers.Normalization or StandardScaler.
+
+        Handle frequency mismatches (e.g., converting daily mortgage rates to monthly averages to match the PPI data).
+
+    Model Building:
